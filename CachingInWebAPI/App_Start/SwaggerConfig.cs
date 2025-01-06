@@ -1,11 +1,11 @@
 using System.Web.Http;
 using WebActivatorEx;
-using AuthinWebAPI;
+using CachingInWebAPI;
 using Swashbuckle.Application;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
-namespace AuthinWebAPI
+namespace CachingInWebAPI
 {
     public class SwaggerConfig
     {
@@ -32,8 +32,7 @@ namespace AuthinWebAPI
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "AuthinWebAPI");
-
+                        c.SingleApiVersion("v1", "CachingInWebAPI");
 
                         // If you want the output Swagger docs to be indented properly, enable the "PrettyPrint" option.
                         //
@@ -249,7 +248,7 @@ namespace AuthinWebAPI
                         // If your API supports ApiKey, you can override the default values.
                         // "apiKeyIn" can either be "query" or "header"
                         //
-                        c.EnableApiKeySupport("Authorization", "header");
+                        //c.EnableApiKeySupport("apiKey", "header");
                     });
         }
     }
