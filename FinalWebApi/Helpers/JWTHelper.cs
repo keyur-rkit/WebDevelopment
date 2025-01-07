@@ -1,15 +1,22 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Net.Http;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Web;
 
-namespace JWTInWebAPI.Handler
+namespace FinalWebApi.Helpers
 {
     /// <summary>
-    /// Handles operations related to JWT token generation and validation.
+    /// Helper class for generating and validating JWT tokens.
     /// </summary>
-    public class JWTHandler
+    public class JWTHelper 
     {
         private const string SecretKey = "RuyekAvdaras417107701741SaradvaKeyur"; // The secret key used for token validation.
 
@@ -47,16 +54,17 @@ namespace JWTInWebAPI.Handler
         }
 
         /// <summary>
-        /// Generates a JWT token for the specified username, with a role claim and expiration.
+        /// Generates a JWT token for the specified username, with role claim and expiration.
         /// </summary>
         /// <param name="username">The username for which the token is being generated.</param>
+        /// <param name="role">The role to assign to the user in the token.</param>
         /// <returns>A string representing the generated JWT token.</returns>
-        public static string GenerateJwtToken(string username)
+        public static string GenerateJwtToken(string username, string role)
         {
             var claims = new[]
             {
             new Claim(ClaimTypes.Name, username),
-            new Claim(ClaimTypes.Role, "Admin") // Example of adding a role claim
+            new Claim(ClaimTypes.Role, role) // Dynamically setting the role
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));

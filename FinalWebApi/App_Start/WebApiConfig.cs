@@ -1,19 +1,10 @@
-﻿using JWTInWebAPI.Handler;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Web;
 using System.Web.Http;
-using System.Net;
+using System.Web.Http.Cors;
 
-namespace JWTInWebAPI
+namespace FinalWebApi
 {
     public static class WebApiConfig
     {
@@ -29,6 +20,10 @@ namespace JWTInWebAPI
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            // Enable CORS globally
+            var cors = new EnableCorsAttribute("*", "*", "*"); // Allow all origins, headers, and methods
+            config.EnableCors(cors);
         }
     }
 }
