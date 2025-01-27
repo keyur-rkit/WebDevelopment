@@ -10,7 +10,7 @@ namespace CORSinWebAPI.Controllers
 {
     public class UserController : ApiController
     {
-        //[EnableCors(origins: "http://127.0.0.1:5500", headers:"*",methods:"*")]
+        //[EnableCors(origins: "*", headers:"*",methods:"*")]
         [HttpGet]
         [Route("api/user")]
         public IEnumerable<string> Get()

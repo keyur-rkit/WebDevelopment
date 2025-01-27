@@ -34,11 +34,12 @@ namespace CachingInWebAPI.Helper
         public static void Set(string key, object value, TimeSpan duration)
         {
             // Insert the value into the cache with the specified duration and an absolute expiration time
-            HttpContext.Current.Cache.Insert(key, value, null, DateTime.Now.Add(duration), Cache.NoSlidingExpiration);
+            // Insert(string key, object value, object dependencies, DateTime absoluteExpiration, TimeSpan slidingExpiration);
+            HttpContext.Current.Cache.Insert(key, value, null, DateTime.MaxValue, duration);
         }
 
         /// <summary>
-        /// Removes an item from the cache by its key.
+        /// Removes an item from the cache by its key.  
         /// </summary>
         /// <param name="key">The key of the cached item to remove.</param>
         public static void Remove(string key)

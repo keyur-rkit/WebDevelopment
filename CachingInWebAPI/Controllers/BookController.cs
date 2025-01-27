@@ -33,7 +33,7 @@ namespace CachingInWebAPI.Controllers
 
             var books = new[] { "book1", "book2", "book3" };
 
-            CacheHelper.Set(cacheKey, books, TimeSpan.FromMinutes(10));
+            CacheHelper.Set(cacheKey, books, TimeSpan.FromMinutes(20));
 
             return Ok(books);
         }

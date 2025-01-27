@@ -26,12 +26,13 @@ namespace AuthinWebAPI.Filters
         {
             if (actionContext.Request.Headers.Authorization == null)
             {
-                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized,"Missing Headers");
             }
             else
             {
                 string authenticationToken = actionContext.Request.Headers.Authorization.Parameter;
-                string credentials = Encoding.UTF8.GetString(Convert.FromBase64String(authenticationToken));
+                byte[] temp = Convert.FromBase64String(authenticationToken);
+                string credentials = Encoding.UTF8.GetString(temp);
                 string[] credentialsValues = credentials.Split(':');
                 string username = credentialsValues[0];
                 string password = credentialsValues[1];
@@ -42,7 +43,7 @@ namespace AuthinWebAPI.Filters
                 }
                 else
                 {
-                    actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+                    actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "Invalid credential");
                 }
             }
         }
@@ -58,5 +59,7 @@ namespace AuthinWebAPI.Filters
             // Replace this with actual validation logic, such as checking against a database
             return username == "admin" && password == "password";
         }
+
+        // Base64 encoded 'admin:password' YWRtaW46cGFzc3dvcmQ= 
     }
 }

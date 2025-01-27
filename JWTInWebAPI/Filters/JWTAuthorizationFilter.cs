@@ -25,12 +25,19 @@ namespace JWTInWebAPI.Filters
             _allowedRoles = roles;
         }
 
+
         /// <summary>
         /// Checks the presence and validity of the JWT token and validates user roles.
         /// </summary>
         /// <param name="actionContext">The context of the current HTTP action.</param>
         public override void OnAuthorization(HttpActionContext actionContext)
         {
+
+#if DEBUG
+            return;
+
+#else
+
             // Check if the Authorization header is present
             if (actionContext.Request.Headers.Authorization == null ||
                 string.IsNullOrWhiteSpace(actionContext.Request.Headers.Authorization.Parameter))
@@ -38,7 +45,6 @@ namespace JWTInWebAPI.Filters
                 actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Missing or invalid token.");
                 return;
             }
-
             string token = actionContext.Request.Headers.Authorization.Parameter;
 
             try
@@ -71,6 +77,7 @@ namespace JWTInWebAPI.Filters
             {
                 actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.Unauthorized, $"Invalid token. Error: {ex.Message}");
             }
+#endif
         }
     }
 }

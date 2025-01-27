@@ -16,6 +16,7 @@ namespace DatabaseCRUD.Controllers
     public class BookController : ApiController
     {
         private readonly string _connectionString;
+        private string cacheKey = "KeyursCacheKey";
 
         public BookController()
         {
@@ -31,7 +32,6 @@ namespace DatabaseCRUD.Controllers
         [JWTAuthorizationFilter("User","Admin","Editor")]
         public IHttpActionResult Get()
         {
-            string cacheKey = "GetCacheKey";
             var cachedBooks = CacheHelper.Get(cacheKey);
 
             if (cachedBooks != null)
@@ -75,13 +75,6 @@ namespace DatabaseCRUD.Controllers
         [JWTAuthorizationFilter("User","Admin","Editor")]
         public IHttpActionResult Get(int ISBN)
         {
-            string cacheKey = "GetCacheKey" + ISBN.ToString();
-            var cachedBooks = CacheHelper.Get(cacheKey);
-            if(cachedBooks != null)
-            {
-                return Ok(cachedBooks);
-            }
-
             var book = new BookModel();
             using (var conn = new MySqlConnection(_connectionString))
             {
@@ -105,7 +98,6 @@ namespace DatabaseCRUD.Controllers
                     }
                 }
             }
-            CacheHelper.Set(cacheKey,book,TimeSpan.FromSeconds(30));
             return Ok(book);
         }
 
@@ -137,6 +129,7 @@ namespace DatabaseCRUD.Controllers
                     command.ExecuteNonQuery();
                 }
             }
+            CacheHelper.Remove(cacheKey);
             return Created($"api/books/{book.ISBN}", book);
         }
 
@@ -177,6 +170,7 @@ namespace DatabaseCRUD.Controllers
                     }
                 }
             }
+            CacheHelper.Remove(cacheKey);
             return Ok(book);
         }
 
@@ -205,6 +199,7 @@ namespace DatabaseCRUD.Controllers
                     }
                 }
             }
+            CacheHelper.Remove(cacheKey);
             return Ok($"Book with {ISBN} deleted successfully");
         }
     }
