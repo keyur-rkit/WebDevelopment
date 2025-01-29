@@ -37,7 +37,9 @@ namespace AuthorizationInWebAPI.Auth
             {
                 string authToken = actionContext.Request.Headers.Authorization.Parameter;
                 // username:password base64 encoded
-                // admin:password
+                // NormalUser:12345 Tm9ybWFsVXNlcjoxMjM0NQ
+                // AdminUser:12345 QWRtaW5Vc2VyOjEyMzQ1
+                // SuperAdminUser:12345 U3VwZXJBZG1pblVzZXI6MTIzNDU=
 
                 string decodedAuthToken = Encoding.UTF8.GetString(Convert.FromBase64String(authToken));
                 string[] usernamepassword = decodedAuthToken.Split(':');
@@ -81,7 +83,7 @@ namespace AuthorizationInWebAPI.Auth
         /// <returns>Returns true if the credentials match an existing user, otherwise false.</returns>
         public static bool Login(string username, string password)
         {
-            return User.GetUsers().Any(user => user.UserName.Equals(username) && user.Password == password);
+            return User.GetUsers().Any(user => user.UserName == username && user.Password == password);
         }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace AuthorizationInWebAPI.Auth
         /// <returns>The user details if the credentials are valid, otherwise null.</returns>
         public static User GetUserDetails(string username, string password)
         {
-            return User.GetUsers().FirstOrDefault(user => user.UserName.Equals(username) && user.Password == password);
+            return User.GetUsers().FirstOrDefault(user => user.UserName ==username && user.Password == password);
         }
     }
 }

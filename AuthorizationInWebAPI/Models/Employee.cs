@@ -8,11 +8,34 @@ namespace AuthorizationInWebAPI.Models
     /// </summary>
     public class Employee
     {
+        /// <summary>
+        /// Id
+        /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// FirstName
+        /// </summary>
         public string FirstName { get; set; }
+
+        /// <summary>
+        /// LastName
+        /// </summary>
         public string LastName { get; set; }
+
+        /// <summary>
+        /// Gender
+        /// </summary>
         public string Gender { get; set; }
+
+        /// <summary>
+        /// City
+        /// </summary>
         public string City { get; set; }
+
+        /// <summary>
+        /// IsActive
+        /// </summary>
         public bool IsActive { get; set; }
 
         /// <summary>

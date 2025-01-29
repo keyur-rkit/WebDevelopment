@@ -31,9 +31,9 @@ namespace CachingInWebAPI.Controllers
                 return Ok(cachedBooks); // Return cached data
             }
 
-            var books = new[] { "book1", "book2", "book3" };
+            string[] books = new[] { "book1", "book2", "book3" };
 
-            CacheHelper.Set(cacheKey, books, TimeSpan.FromMinutes(20));
+            CacheHelper.Set(cacheKey, books, TimeSpan.FromMinutes(10));
 
             return Ok(books);
         }

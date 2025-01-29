@@ -13,20 +13,19 @@ using System.Security.Principal;
 namespace AuthinWebAPI.Filters
 {
     /// <summary>
-    /// Custom authorization filter that implements Basic Authentication for HTTP requests.
+    /// Custom filter implementing Basic Authentication.
     /// </summary>
     public class BasicAuthenticationAttribute : AuthorizationFilterAttribute
     {
         /// <summary>
-        /// OnAuthorization method is called during the authorization process. It checks the presence of an Authorization header,
-        /// validates the credentials, and sets the current principal if authorized, otherwise responds with Unauthorized status.
+        /// Checks Authorization header, validates credentials, and sets principal.
         /// </summary>
-        /// <param name="actionContext">The action context containing the request and response details.</param>
+        /// <param name="actionContext">The action context with request and response details.</param>
         public override void OnAuthorization(HttpActionContext actionContext)
         {
             if (actionContext.Request.Headers.Authorization == null)
             {
-                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized,"Missing Headers");
+                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "Missing Headers");
             }
             else
             {
@@ -49,17 +48,16 @@ namespace AuthinWebAPI.Filters
         }
 
         /// <summary>
-        /// Validates the provided username and password to check if the user is authorized.
+        /// Validates username and password.
         /// </summary>
-        /// <param name="username">The username provided in the request.</param>
-        /// <param name="password">The password associated with the username.</param>
-        /// <returns>True if the user is authorized, false otherwise.</returns>
+        /// <param name="username">The provided username.</param>
+        /// <param name="password">The provided password.</param>
+        /// <returns>True if valid, else false.</returns>
         private bool IsAuthorizedUser(string username, string password)
         {
-            // Replace this with actual validation logic, such as checking against a database
             return username == "admin" && password == "password";
         }
 
-        // Base64 encoded 'admin:password' YWRtaW46cGFzc3dvcmQ= 
+        // Base64 encoded 'admin:password' YWRtaW46cGFzc3dvcmQ=
     }
 }

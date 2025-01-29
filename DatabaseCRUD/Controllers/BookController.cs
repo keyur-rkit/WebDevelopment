@@ -25,16 +25,16 @@ namespace DatabaseCRUD.Controllers
         /// <returns>A collection of books.</returns>
         [HttpGet]
         [Route("api/books")]
-        public IEnumerable<BookModel> Get()
+        public IHttpActionResult Get()
         {
-            var books = new List<BookModel>();
-            using (var conn = new MySqlConnection(_connectionString))
+            List<BookModel> books = new List<BookModel>();
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                var query = "SELECT * FROM Books";
-                using (var command = new MySqlCommand(query, conn))
+                string query = "SELECT * FROM Books";
+                using (MySqlCommand command = new MySqlCommand(query, conn))
                 {
-                    using (var reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -49,7 +49,7 @@ namespace DatabaseCRUD.Controllers
                     }
                 }
             }
-            return books;
+            return Ok(books);
         }
 
         /// <summary>
@@ -61,14 +61,14 @@ namespace DatabaseCRUD.Controllers
         [Route("api/books/{ISBN}")]
         public IHttpActionResult Get(int ISBN)
         {
-            var book = new BookModel();
-            using (var conn = new MySqlConnection(_connectionString))
+            BookModel book = new BookModel();
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                var query = $"SELECT * FROM Books WHERE ISBN = {ISBN}";
-                using (var command = new MySqlCommand(query, conn))
+                string query = $"SELECT * FROM Books WHERE ISBN = {ISBN}";
+                using (MySqlCommand command = new MySqlCommand(query, conn))
                 {
-                    using (var reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -100,11 +100,11 @@ namespace DatabaseCRUD.Controllers
             {
                 return BadRequest("Invalid book data.");
             }
-            using (var conn = new MySqlConnection(_connectionString))
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                var query = @"INSERT INTO Books (ISBN, BookName, Category, Author) VALUES (@ISBN,@BookName,@Category,@Author);";
-                using (var command = new MySqlCommand(query, conn))
+                string query = @"INSERT INTO Books (ISBN, BookName, Category, Author) VALUES (@ISBN,@BookName,@Category,@Author);";
+                using (MySqlCommand command = new MySqlCommand(query, conn))
                 {
                     command.Parameters.AddWithValue("@ISBN", book.ISBN);
                     command.Parameters.AddWithValue("@BookName", book.BookName);
@@ -114,7 +114,7 @@ namespace DatabaseCRUD.Controllers
                     command.ExecuteNonQuery();
                 }
             }
-            return Created($"api/books/{book.ISBN}", book);
+            return Ok("Book added");
         }
 
         /// <summary>
@@ -135,11 +135,11 @@ namespace DatabaseCRUD.Controllers
             {
                 return BadRequest("ISBN cannot be modified.");
             }
-            using (var conn = new MySqlConnection(_connectionString))
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                var query = @"UPDATE Books SET BookName = @BookName, Category = @Category , Author = @Author WHERE ISBN = @ISBN;";
-                using (var command = new MySqlCommand(query, conn))
+                string query = @"UPDATE Books SET BookName = @BookName, Category = @Category , Author = @Author WHERE ISBN = @ISBN;";
+                using (MySqlCommand command = new MySqlCommand(query, conn))
                 {
                     command.Parameters.AddWithValue("@ISBN", book.ISBN);
                     command.Parameters.AddWithValue("@BookName", book.BookName);
@@ -165,11 +165,11 @@ namespace DatabaseCRUD.Controllers
         [Route("api/books")]
         public IHttpActionResult Delete(int ISBN)
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                var query = @"DELETE FROM Books WHERE ISBN = @ISBN";
-                using (var command = new MySqlCommand(query, conn))
+                string query = @"DELETE FROM Books WHERE ISBN = @ISBN";
+                using (MySqlCommand command = new MySqlCommand(query, conn))
                 {
                     command.Parameters.AddWithValue("@ISBN", ISBN);
 

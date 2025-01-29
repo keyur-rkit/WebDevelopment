@@ -27,12 +27,12 @@ namespace FinalWebApi.Helpers
         /// <returns>A ClaimsPrincipal if the token is valid, otherwise null.</returns>
         public static ClaimsPrincipal ValidateJwtToken(string token)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
-            var handler = new JwtSecurityTokenHandler();
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
 
             try
             {
-                var parameters = new TokenValidationParameters
+                TokenValidationParameters parameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -43,7 +43,7 @@ namespace FinalWebApi.Helpers
                 };
 
                 SecurityToken validatedToken;
-                var principal = handler.ValidateToken(token, parameters, out validatedToken);
+                ClaimsPrincipal principal = handler.ValidateToken(token, parameters, out validatedToken);
 
                 return principal;
             }
@@ -61,7 +61,7 @@ namespace FinalWebApi.Helpers
         /// <returns>A string representing the generated JWT token.</returns>
         public static string GenerateJwtToken(string username, string role)
         {
-            var claims = new[]
+            Claim[] claims = new[]
             {
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.Role, role) // Dynamically setting the role

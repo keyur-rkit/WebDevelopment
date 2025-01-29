@@ -249,7 +249,7 @@ namespace AuthinWebAPI
                         // If your API supports ApiKey, you can override the default values.
                         // "apiKeyIn" can either be "query" or "header"
                         //
-                        //c.EnableApiKeySupport("Authorization", "header");
+                        c.EnableApiKeySupport("Authorization", "header");
 
 
                     });

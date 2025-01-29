@@ -7,6 +7,9 @@ using System.Web.Http;
 using Microsoft.IdentityModel.Tokens;
 using FinalWebApi.Models;
 using FinalWebApi.Helpers;
+using MySql.Data.MySqlClient;
+using System.Configuration;
+using System.Windows.Input;
 
 /// <summary>
 /// Controller for handling authentication-related actions like login and JWT token generation.
@@ -14,33 +17,72 @@ using FinalWebApi.Helpers;
 [RoutePrefix("api/auth")]
 public class AuthController : ApiController
 {
+    private readonly string _connectionString;
+
+    public AuthController()
+    {
+        _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+    }
+
+
     /// <summary>
-    /// Logs in the user by validating their credentials and generates a JWT token for authorized users.
-    /// If credentials are valid, a token is returned; otherwise, the user is unauthorized.
+    /// Login method to get JWT token if user exist
     /// </summary>
-    /// <param name="login">The login model containing the username and password.</param>
-    /// <returns>An IHttpActionResult containing the generated JWT token or an Unauthorized response.</returns>
+    /// <param name="login">LoginModel</param>
+    /// <returns>IHttpActionResult</returns>
     [HttpPost]
     [Route("login")]
     public IHttpActionResult Login([FromBody] LoginModel login)
     {
-        // Validate user credentials (this is just a simple example)
-        if (login.Username == "admin" && login.Password == "password")
+        // Validate user credentials 
+        UserModel user  = GetUser(login);
+
+        if(user == null)
         {
-            var token = JWTHelper.GenerateJwtToken(login.Username, "Admin"); // Admin role
-            return Ok(new { token });
-        }
-        else if (login.Username == "user" && login.Password == "password")
-        {
-            var token = JWTHelper.GenerateJwtToken(login.Username, "User"); // User role
-            return Ok(new { token });
-        }
-        else if (login.Username == "editor" && login.Password == "password")
-        {
-            var token = JWTHelper.GenerateJwtToken(login.Username, "Editor"); // Editor role
-            return Ok(new { token });
+            return BadRequest("Invalid Username or Password");
         }
 
-        return BadRequest("Invalid Username or Password");
-    }   
+        string token = JWTHelper.GenerateJwtToken(user.Username, user.Role);
+        return Ok(token);
+
+    }
+
+    /// <summary>
+    /// Method to get user from username and password
+    /// </summary>
+    /// <param name="objLoginModel">LoginModel</param>
+    /// <returns>UserModel</returns>
+    [HttpGet]
+    [Route("GetUser")]
+    public UserModel GetUser(LoginModel objLoginModel)
+    {
+        UserModel user = new UserModel();
+        using (MySqlConnection conn = new MySqlConnection(_connectionString))
+        {
+            conn.Open();
+            string query = @"SELECT * FROM user WHERE username = @username AND password = @password";
+            using (MySqlCommand command = new MySqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@username", objLoginModel.Username);
+                command.Parameters.AddWithValue("@password", objLoginModel.Password);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        user.Id = Convert.ToInt32(reader["id"]);
+                        user.Username = reader["username"].ToString();
+                        user.Password = reader["password"].ToString();
+                        user.Role = reader["role"].ToString();
+
+                        return user;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
+    }
 }

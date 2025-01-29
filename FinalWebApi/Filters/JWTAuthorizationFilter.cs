@@ -44,7 +44,7 @@ namespace FinalWebApi.Filters
 
             try
             {
-                var principal = JWTHelper.ValidateJwtToken(token);
+                ClaimsPrincipal principal = JWTHelper.ValidateJwtToken(token);
                 // Validate the JWT token
                 if (principal == null)
                 {
@@ -53,7 +53,7 @@ namespace FinalWebApi.Filters
                 }
 
                 // Extract role from the token
-                var userRole = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+                string userRole = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
                 if (string.IsNullOrEmpty(userRole))
                 {
                     actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Role information missing in token.");

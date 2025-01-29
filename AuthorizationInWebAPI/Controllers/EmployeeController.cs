@@ -15,7 +15,7 @@ namespace BasicAuth.API.Controllers
     /// Implements basic authentication and authorization based on user roles.
     /// </summary>
     [RoutePrefix("api/employees")]
-    [BasicAuthenticationAttribute]
+    [BasicAuthentication]
     public class EmployeesController : ApiController
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace BasicAuth.API.Controllers
         /// </summary>
         /// <returns>An HttpResponseMessage containing a list of employees.</returns>
         [Route("GetFewEmployees")]
-        [BasicAuthorizationAttribute(Roles = "User")]
+        [BasicAuthorization(Roles = "User")]
         public HttpResponseMessage GetFewEmployees()
         {
             return Request.CreateResponse(HttpStatusCode.OK, Employee.GetEmployees().Where(e => e.Id < 3));
@@ -36,7 +36,7 @@ namespace BasicAuth.API.Controllers
         /// </summary>
         /// <returns>An HttpResponseMessage containing a list of employees.</returns>
         [Route("GetMoreEmployees")]
-        [BasicAuthorizationAttribute(Roles = "Admin")]
+        [BasicAuthorization(Roles = "Admin")]
         public HttpResponseMessage GetMoreEmployees()
         {
             return Request.CreateResponse(HttpStatusCode.OK, Employee.GetEmployees().Where(e => e.Id < 6));
@@ -48,7 +48,7 @@ namespace BasicAuth.API.Controllers
         /// </summary>
         /// <returns>An HttpResponseMessage containing a list of all employees.</returns>
         [Route("GetAllEmployees")]
-        [BasicAuthorizationAttribute(Roles = "SuperAdmin")]
+        [BasicAuthorization(Roles = "SuperAdmin")]
         public HttpResponseMessage GetAllEmployees()
         {
             return Request.CreateResponse(HttpStatusCode.OK, Employee.GetEmployees());

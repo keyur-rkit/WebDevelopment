@@ -10,10 +10,29 @@ namespace AuthorizationInWebAPI.Models
     /// </summary>
     public class User
     {
+        /// <summary>
+        /// Id
+        /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// UserName
+        /// </summary>
         public string UserName { get; set; }
+
+        /// <summary>
+        /// Password
+        /// </summary>
         public string Password { get; set; }
+
+        /// <summary>
+        /// Roles
+        /// </summary>
         public string Roles { get; set; }
+
+        /// <summary>
+        /// Email
+        /// </summary>
         public string Email { get; set; }
 
         /// <summary>

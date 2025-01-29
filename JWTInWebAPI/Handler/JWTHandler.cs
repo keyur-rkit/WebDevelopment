@@ -20,12 +20,12 @@ namespace JWTInWebAPI.Handler
         /// <returns>A ClaimsPrincipal if the token is valid, otherwise null.</returns>
         public static ClaimsPrincipal ValidateJwtToken(string token)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
-            var handler = new JwtSecurityTokenHandler();
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
 
             try
             {
-                var parameters = new TokenValidationParameters
+                TokenValidationParameters parameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -53,16 +53,16 @@ namespace JWTInWebAPI.Handler
         /// <returns>A string representing the generated JWT token.</returns>
         public static string GenerateJwtToken(string username)
         {
-            var claims = new[]
+            Claim[] claims = new[]
             {
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.Role, "Admin") // Example of adding a role claim
         };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
+            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(
+            JwtSecurityToken token = new JwtSecurityToken(
                 issuer: "Issuer",
                 audience: "Audience",
                 claims: claims,
