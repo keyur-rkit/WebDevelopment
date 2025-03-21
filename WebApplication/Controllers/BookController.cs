@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.ModelBinding;
 using WebApplication.Models;
@@ -60,6 +61,18 @@ namespace WebApplication.Controllers
             return Ok(book);
         }
         #endregion
+
+        [HttpGet]
+        [Route("api/delay/{delayInMs}")]
+        public async Task<IHttpActionResult> GetDelayedResponse([FromUri] int delayInMs = 1000)
+        {
+            // Max delay of 15 minutes
+            int maxDelay = 15 * 60 * 1000; // 15 minutes in milliseconds
+            int safeDelay = Math.Min(delayInMs, maxDelay);
+
+            await Task.Delay(safeDelay); // Non-blocking delay
+            return Ok(new { message = "Delayed response", delay = $"{safeDelay / 1000} seconds" });
+        }
 
         #region PostBook
         /// <summary>
